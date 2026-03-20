@@ -1,8 +1,7 @@
-# Use Node.js 20 Alpine as base image
 FROM node:20-alpine
 
 # Enable Corepack for Yarn 4
-RUN corepack enable
+RUN corepack enable && corepack prepare yarn@4.12.0 --activate
 
 # Set working directory
 WORKDIR /app
@@ -16,7 +15,7 @@ RUN yarn install
 # Copy all source code
 COPY . .
 
-# Copy env file
+# Copy env file if exists
 COPY .env.local .env.local
 
 # Build Next.js application
