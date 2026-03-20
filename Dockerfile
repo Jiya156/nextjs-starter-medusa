@@ -1,11 +1,14 @@
 # Use Node.js 20 Alpine as base image
 FROM node:20-alpine
 
+# Enable Corepack for Yarn 4
+RUN corepack enable
+
 # Set working directory
 WORKDIR /app
 
 # Copy package files
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock .yarnrc.yml ./
 
 # Install dependencies
 RUN yarn install
