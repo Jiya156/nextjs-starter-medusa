@@ -1,12 +1,13 @@
 FROM node:20-alpine
 
-# Enable Corepack for Yarn 4
-RUN corepack enable && corepack prepare yarn@4.12.0 --activate
+# Enable Corepack
+RUN corepack enable
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy yarn files including .yarn folder with releases
+COPY .yarn ./.yarn
 COPY package.json yarn.lock .yarnrc.yml ./
 
 # Install dependencies
@@ -15,10 +16,13 @@ RUN yarn install
 # Copy all source code
 COPY . .
 
-# Copy env file if exists
+# Copy env file
 COPY .env.local .env.local
 
-# Build Next.js application
+# Build Next.js — skip static generation during build
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV SKIP_BUILD_STATIC_GENERATION=true
+
 RUN yarn build
 
 # Expose frontend port
